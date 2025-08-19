@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   });
 
- // mint
 mintBtn.addEventListener("click", async () => {
   if (!contract) {
     statusEl.textContent = "Please connect wallet first";
@@ -41,7 +40,12 @@ mintBtn.addEventListener("click", async () => {
   }
 
   try {
-    const recruiterAddr = document.getElementById("recruiterSelect").value;
+    const recruiterAddr = recruiterSelect.value;
+    console.log("Recruiter address selected:", recruiterAddr); // 🪵 Debug
+
+    if (!recruiterAddr.startsWith("0x")) {
+      throw new Error("Recruiter address is invalid: " + recruiterAddr);
+    }
 
     const tx = await contract.mintCV(
       recruiterAddr,

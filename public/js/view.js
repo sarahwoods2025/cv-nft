@@ -1,75 +1,68 @@
+// public/js/view.js
 (async function () {
   const cfg = window.__DAPP_CONFIG__;
-  const tokenInput = document.getElementById("tokenInput");
-  const loadBtn = document.getElementById("loadBtn");
-  const ownerEl = document.getElementById("owner");
-  const recruiterEl = document.getElementById("recruiter");
-  const bpsEl = document.getElementById("bps");
-  const openMeta = document.getElementById("openMeta");
-  const openPDF = document.getElementById("openPDF");
   const status = document.getElementById("status");
-  const pdfEmbed = document.getElementById("pdfEmbed");
-  const pdfFrame = document.getElementById("pdfFrame");
-  const shareLink = document.getElementById("shareLink");
-  const emailLink = document.getElementById("emailLink");
+  const tokenIdInput = document.getElementById("tokenIdInput");
+  const loadBtn = document.getElementById("loadBtn");
+  const resultDiv = document.getElementById("result");
 
-  const abi = await (await fetch("/abi/Cvnft.json")).json();
+  // Load ABI
+  let abi = await (await fetch("/abi/Cvnft.json")).json();
 
-  // Read-only public RPC (no wallet needed)
-  const provider = new ethers.providers.JsonRpcProvider("https://rpc.sepolia.org");
-  const contract = new ethers.Contract(cfg.CONTRACT_ADDRESS, abi, provider);
+  let provider, contract;
 
-  const ipfsToHttp = (uri) =>
-    uri?.startsWith("ipfs://") ? uri.replace("ipfs://", "https://ipfs.io/ipfs/") : uri;
-
-  async function load() {
-    try {
-      status.textContent = "Loading…";
-      const tokenId = Number(tokenInput.value);
-      if (!tokenId) throw new Error("Enter a tokenId");
-
-      const [owner, cv, uri] = await Promise.all([
-        contract.ownerOf(tokenId),
-        contract.getCV(tokenId),   // returns { recruiter, commissionBps, paid }
-        contract.tokenURI(tokenId)
-      ]);
-
-      ownerEl.textContent = owner;
-      recruiterEl.textContent = cv.recruiter;
-      bpsEl.textContent = cv.commissionBps.toString();
-
-      // metadata + pdf
-      const metaURL = ipfsToHttp(uri);
-      openMeta.href = metaURL;
-      const meta = await (await fetch(metaURL)).json().catch(() => null);
-      if (meta?.animation_url) {
-        const pdfURL = ipfsToHttp(meta.animation_url);
-        openPDF.href = pdfURL;
-        pdfFrame.src = pdfURL;
-        pdfEmbed.classList.remove("hidden");
-      } else {
-        openPDF.removeAttribute("href");
-        pdfEmbed.classList.add("hidden");
-      }
-
-      // share helpers
-      const share = `${location.origin}/view/${tokenId}`;
-      shareLink.href = share;
-      shareLink.onclick = (e) => {
-        e.preventDefault();
-        navigator.clipboard?.writeText(share);
-        status.textContent = "Share link copied to clipboard.";
-      };
-      emailLink.href =
-        `mailto:?subject=Sarah%20Woods%20CV%20NFT%20%28token%20${tokenId}%29` +
-        `&body=View%20this%20CV%20token:%20${encodeURIComponent(share)}`;
-
-      status.textContent = "Loaded.";
-    } catch (e) {
-      status.textContent = e.message || String(e);
+  async function init() {
+    if (!window.ethereum) {
+      status.textContent = "MetaMask not found";
+      return;
     }
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    contract = new ethers.Contract(cfg.CONTRACT_ADDRESS, abi, provider);
   }
 
-  loadBtn.onclick = load;
-  if (tokenInput.value) load();
+  loadBtn?.addEventListener("click", async () => {
+    try {
+      await init();
+      const tokenId = tokenIdInput.value.trim();
+      if (!tokenId) {
+        status.textContent = "Enter a token ID";
+        return;
+      }
+
+      status.textContent = "Loading token data…";
+
+      // --- Read recruiter address from contract ---
+      const recruiter = await contract.recruiters(tokenId);
+
+      // --- Read tokenURI & resolve metadata ---
+      const tokenUri = await contract.tokenURI(tokenId);
+      let metadata = {};
+      try {
+        // Swap ipfs:// with a gateway
+        const url = tokenUri.replace("ipfs://", "https://ipfs.io/ipfs/");
+        metadata = await (await fetch(url)).json();
+      } catch (e) {
+        console.warn("Metadata fetch failed:", e);
+      }
+
+      // --- Display info ---
+      resultDiv.innerHTML = `
+        <p><strong>Token ID:</strong> ${tokenId}</p>
+        <p><strong>Recruiter:</strong> ${recruiter}</p>
+        <p><strong>Token URI:</strong> ${tokenUri}</p>
+        <p><strong>Name:</strong> ${metadata.name || "(none)"}</p>
+        <p><strong>Description:</strong> ${metadata.description || "(none)"}</p>
+        ${
+          metadata.image
+            ? `<img src="${metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")}" 
+                   alt="CV Preview" style="max-width:300px;"/>`
+            : ""
+        }
+      `;
+
+      status.textContent = "Loaded successfully.";
+    } catch (e) {
+      status.textContent = `Load failed: ${e.message || e}`;
+    }
+  });
 })();

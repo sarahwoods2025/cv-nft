@@ -35,7 +35,7 @@
 
   async function ensureNetwork() {
     if (!window.ethereum) throw new Error("MetaMask not found");
-    const wantedDec = Number(cfg.CHAIN_ID_DEC || cfg.CONTRACT_CHAIN_ID || 11155111);
+    const wantedDec = Number(cfg.CHAIN_ID_DEC || 11155111);
     const net = NETWORKS[wantedDec];
     const current = (await ethereum.request({ method: "eth_chainId" })).toLowerCase();
     if (current !== net.chainIdHex.toLowerCase()) {
@@ -63,43 +63,44 @@
   }
 
   connectBtn?.addEventListener("click", async () => {
-    try { await connect(); status.textContent = "Wallet connected."; }
-    catch (e) { status.textContent = e.message || String(e); }
+    try { 
+      await connect(); 
+      status.textContent = "Wallet connected."; 
+    } catch (e) { 
+      status.textContent = e.message || String(e); 
+    }
   });
 
   // ---- Recruiter mapping (dropdown -> wallet address) ----
   const RECRUITER_MAP = {
-    "DreamJob": cfg.DEFAULT_RECRUITER, // comes from your env.config
+    "DreamJob": cfg.DEFAULT_RECRUITER,
   };
 
+  // ---- Mint ----
   mintBtn?.addEventListener("click", async () => {
-  try {
-    if (!contract) await connect();
+    try {
+      if (!contract) await connect();
 
-    // Recruiter comes from dropdown
-    const recruiterName = document.getElementById("recruiterInput")?.value || "DreamJob";
-    const recruiterAddr = RECRUITER_MAP[recruiterName];
+      const recruiterName = document.getElementById("recruiterInput")?.value || "DreamJob";
+      const recruiterAddr = RECRUITER_MAP[recruiterName];
 
-    // Hardcode commission (10%)
-    const commissionBps = 1000;
+      // Token URI from env config
+      const tokenUri = cfg.TOKEN_URI;
 
-    // Token URI from env config
-    const tokenUri = cfg.TOKEN_URI;
+      status.textContent = "Submitting mint…";
+      // ✅ Only 2 args (recruiter, tokenUri)
+      const tx = await contract.mintCV(recruiterAddr, tokenUri);
+      const rc = await tx.wait();
 
-    status.textContent = "Submitting mint…";
-    const tx = await contract.mintCV(recruiterAddr, tokenUri);
-    const rc = await tx.wait();
+      const ev = rc.events?.find(e => e.event === "CVMinted");
+      const tokenId = ev?.args?.tokenId?.toString?.() ?? "check tx";
 
-    const ev = rc.events?.find(e => e.event === "CVMinted");
-    const tokenId = ev?.args?.tokenId?.toString?.() ?? "check tx";
-
-    const share = `${location.origin}/view/${tokenId}`;
-    status.innerHTML = `Minted! Token ID: ${tokenId} — <a href="${share}" target="_blank" rel="noopener">Open recruiter view</a>`;
-  } catch (e) {
-    status.textContent = `Mint failed: ${e.message || String(e)}`;
-  }
-});
-
+      const share = `${location.origin}/view/${tokenId}`;
+      status.innerHTML = `Minted! Token ID: ${tokenId} — <a href="${share}" target="_blank" rel="noopener">Open recruiter view</a>`;
+    } catch (e) {
+      status.textContent = `Mint failed: ${e.message || String(e)}`;
+    }
+  });
 
   if (window.ethereum) {
     ethereum.on("accountsChanged", () => location.reload());

@@ -73,29 +73,33 @@
   };
 
   mintBtn?.addEventListener("click", async () => {
-    try {
-      if (!contract) await connect();
+  try {
+    if (!contract) await connect();
 
-      const recruiterName = document.getElementById("recruiterInput")?.value || "DreamJob";
-      const recruiter = RECRUITER_MAP[recruiterName];
+    // Recruiter comes from dropdown
+    const recruiterName = document.getElementById("recruiterInput")?.value || "DreamJob";
+    const recruiterAddr = RECRUITER_MAP[recruiterName];
 
-      const bps = Number(cfg.DEFAULT_BPS);
-      const tokenUri = cfg.TOKEN_URI;
+    // Hardcode commission (10%)
+    const commissionBps = 1000;
 
-      status.textContent = "Submitting mint…";
-      const tx = await contract.mintCV(recruiter, bps, tokenUri);
-      const rc = await tx.wait();
+    // Token URI from env config
+    const tokenUri = cfg.TOKEN_URI;
 
-      const ev = rc.events?.find(e => e.event === "CVMinted");
-      const tokenId = ev?.args?.tokenId?.toString?.() ?? "check tx";
+    status.textContent = "Submitting mint…";
+    const tx = await contract.mintCV(recruiterAddr, commissionBps, tokenUri);
+    const rc = await tx.wait();
 
-      const share = `${location.origin}/view/${tokenId}`;
-      status.innerHTML = `Minted! Token ID: ${tokenId} — <a href="${share}" target="_blank" rel="noopener">Open recruiter view</a>`;
-      try { await navigator.clipboard.writeText(share); status.innerHTML += " (link copied)"; } catch {}
-    } catch (e) {
-      status.textContent = `Mint failed: ${e.message || String(e)}`;
-    }
-  });
+    const ev = rc.events?.find(e => e.event === "CVMinted");
+    const tokenId = ev?.args?.tokenId?.toString?.() ?? "check tx";
+
+    const share = `${location.origin}/view/${tokenId}`;
+    status.innerHTML = `Minted! Token ID: ${tokenId} — <a href="${share}" target="_blank" rel="noopener">Open recruiter view</a>`;
+  } catch (e) {
+    status.textContent = `Mint failed: ${e.message || String(e)}`;
+  }
+});
+
 
   if (window.ethereum) {
     ethereum.on("accountsChanged", () => location.reload());

@@ -2,6 +2,11 @@
   const cfg = window.__DAPP_CONFIG__;
   const accountSpan = document.getElementById("accountSpan");
   const connectBtn = document.getElementById("connectBtn");
+  const CONTRACT_ADDRESS = "0xe9b693fc44b23764cef43716eaf2f1b9e88d1bf0";
+  const TOKEN_URI = "ipfs://Qm.....";  // your pinned CV metadata URI
+
+contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+
 
   // Load ABI (you'll paste the ABI JSON into /abi/Cvnft.json)
   let abi = await (await fetch("/abi/Cvnft.json")).json();

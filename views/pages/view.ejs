@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>View CV Token</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main class="container card glow">
+    <h1>CV NFT — Recruiter View</h1>
+
+    <div class="row">
+      <input id="tokenInput" placeholder="Enter tokenId" style="width:220px;padding:8px;" value="<%= tokenId %>"/>
+      <button id="loadBtn" class="btn">Load</button>
+      <a id="shareLink" class="btn" href="#" target="_blank" rel="noopener">Copy Share Link</a>
+      <a id="emailLink" class="btn" href="#" target="_blank" rel="noopener">Email Link</a>
+    </div>
+
+    <div class="stack">
+      <p><strong>Owner (candidate):</strong> <span id="owner">—</span></p>
+      <p><strong>Recruiter (on-chain):</strong> <span id="recruiter">—</span></p>
+      <p><strong>Commission (bps):</strong> <span id="bps">—</span></p>
+      <div class="row">
+        <a id="openMeta" class="btn" href="#" target="_blank" rel="noopener">Open Metadata</a>
+        <a id="openPDF" class="btn" href="#" target="_blank" rel="noopener">Open CV (PDF)</a>
+      </div>
+
+      <div id="pdfEmbed" class="pdf-embed hidden">
+        <iframe id="pdfFrame" title="CV PDF"></iframe>
+      </div>
+
+      <p id="status"></p>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <script>
+    window.__DAPP_CONFIG__ = {
+      CONTRACT_ADDRESS: "<%= CONTRACT_ADDRESS %>",
+      CHAIN_ID_DEC: Number("<%= CONTRACT_CHAIN_ID %>")
+    };
+  </script>
+  <script src="/js/view.js"></script>
+</body>
+</html>

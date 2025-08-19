@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Sarah Woods CVNFT</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main class="container stack">
+    <!-- Personal info + highlights -->
+    <section class="card glow">
+      <h1>Sarah Woods</h1>
+
+      <div class="grid-2">
+        <div>
+          <h2>Technical Skills</h2>
+          <ul>
+            <li>Solidity & OpenZeppelin</li>
+            <li>Node.js / Express</li>
+            <li>Ethers.js & Wallet integrations</li>
+            <li>IPFS / Pinata (NFT metadata)</li>
+            <li>Cloud basics (AWS)</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Personal Skills</h2>
+          <ul>
+            <li>Problem solving</li>
+            <li>Collaboration</li>
+            <li>Documentation & demos</li>
+            <li>Critical thinking and creative</li>
+            <li>Cross cultural communication</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 class="mt">Highlights</h2>
+      <div class="gallery">
+        <figure>
+          <img src="/img/hackathon.jpg" alt="Hackathon highlight"/>
+          <figcaption>Solana & Techstars hackathon winner</figcaption>
+        </figure>
+        <figure>
+          <img src="/img/superTeamIreland.jpg" alt="ETH Dublin highlight"/>
+          <figcaption>Solana Superteam community member</figcaption>
+        </figure>
+        <figure>
+          <a href="https://studyperks.me" target="_blank" rel="noopener">
+            <img src="/img/studyPerks.png" alt="StudyPerks dApp screenshot"/>
+          </a>
+          <figcaption>
+            <a href="https://studyperks.me" target="_blank" rel="noopener">StudyPerks</a> — a recent dApp I built.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section class="card glow">
+      <h2>Education — National College of Ireland</h2>
+
+      <h3>Higher Diploma in Computing (Blockchain stream)</h3>
+      <ul>
+        <!-- Replace these with your exact modules when ready -->
+        <li>Blockchain Foundations</li>
+        <li>Object Orientated Software Engineering</li>
+        <li>Smart Contracts & dApp Development</li>
+        <li>Distributed Systems</li>
+        <li>Web Design & Client Side Scripting</li>
+        <li>Project - developed & deployed dApp</li>
+      </ul>
+
+      <h3>Certificate in Computing</h3>
+      <ul>
+        <li>Software Development</li>
+        <li>Introduction to Databases</li>
+        <li>Computer Architecture</li>
+      </ul>
+    </section>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

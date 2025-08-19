@@ -1,0 +1,17 @@
+{
+  "name": "cvnft-dapp",
+  "version": "1.0.0",
+  "description": "CV NFT dApp (Express + EJS)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "engines": {
+    "node": ">=18 <23"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2"
+  }
+}

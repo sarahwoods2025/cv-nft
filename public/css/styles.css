@@ -1,0 +1,66 @@
+:root{
+  --ink:#000;
+  --bg:#fff;
+  --blue:#0f2bd6;        /* deep blue hue */
+  --blue-soft: rgba(15,43,214,.2);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.55}
+
+.container{max-width:980px;margin:20px auto;padding:0 16px}
+.rule{border:none;border-top:1px solid #e5e7eb;margin:12px 0}
+
+/* header */
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{width:120px;height:120px;object-fit:contain}
+.nav-right{display:flex;gap:14px;align-items:center}
+.nav-right a{color:var(--ink);text-decoration:none;font-weight:600}
+.nav-right a:hover{text-decoration:underline}
+.btn-link{padding:6px 10px;border:1px solid var(--ink)}
+
+.stack{display:grid;gap:24px}
+
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px}
+.glow{
+  box-shadow:
+    0 0 0 1px rgba(15,43,214,.08),
+    0 12px 30px rgba(15,43,214,.18),
+    0 0 120px rgba(15,43,214,.20) inset;
+}
+
+h1{margin:0 0 8px 0}
+h2{margin:18px 0 10px}
+h3{margin:16px 0 8px}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){ .grid-2{grid-template-columns:1fr} }
+
+ul{margin:8px 0 0 18px}
+.note{opacity:.7;font-size:.9rem;margin-top:12px}
+
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:10px}
+.gallery img{width:100%;border-radius:10px;border:1px solid #e5e7eb}
+.gallery figcaption{font-size:.9rem;margin-top:6px}
+
+.btn{padding:10px 16px;border:1px solid var(--ink);background:#fff;cursor:pointer}
+.btn:hover{background:var(--ink);color:#fff}
+
+.row{display:flex;gap:12px;margin:12px 0}
+.center{text-align:center;justify-content:center}
+
+.cv-img{width:100%;max-width:420px;border-radius:10px;border:1px solid #e5e7eb}
+
+/* footer */
+.footer{display:flex;align-items:center;gap:12px}
+.footer .spacer{flex:1}
+.footer .social{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none}
+.footer .social:hover{text-decoration:underline}
+
+.hidden{display:none}
+.pdf-embed iframe{
+  width:100%; height:600px;
+  border:1px solid #e5e7eb; border-radius:10px; background:#fff;
+}
+

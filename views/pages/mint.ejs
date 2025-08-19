@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Mint CV NFT</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main class="container">
+    <section class="card glow center">
+      <img src="/img/SW-logo.png" alt="CV preview" class="cv-img"/>
+      <div class="row center">
+        <!-- views/pages/mint.ejs, above the buttons -->
+<div class="row center">
+  <input id="recruiterInput" placeholder="Recruiter 0x..." style="width:320px;padding:8px;">
+  <input id="bpsInput" type="number" min="0" max="10000" value="<%= DEFAULT_BPS %>" style="width:140px;padding:8px;">
+</div>
+        <button id="connectBtn" class="btn">Connect Wallet</button>
+        <button id="mintBtn" class="btn">Mint</button>
+      </div>
+      <p id="status"></p>
+      <p id="accountSpan"></p>
+    </section>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <script>
+    window.__DAPP_CONFIG__ = {
+      CONTRACT_ADDRESS: "<%= CONTRACT_ADDRESS %>",
+      CHAIN_ID_DEC: Number("<%= CONTRACT_CHAIN_ID %>"),
+      DEFAULT_RECRUITER: "<%= DEFAULT_RECRUITER %>",
+      DEFAULT_BPS: Number("<%= DEFAULT_BPS %>"),
+      TOKEN_URI: "<%= TOKEN_URI %>"
+    };
+  </script>
+  <script src="/js/mint.js"></script>
+</body>
+</html>

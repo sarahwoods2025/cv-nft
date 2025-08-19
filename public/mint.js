@@ -87,7 +87,7 @@
     const tokenUri = cfg.TOKEN_URI;
 
     status.textContent = "Submitting mint…";
-    const tx = await contract.mintCV(recruiterAddr, commissionBps, tokenUri);
+    const tx = await contract.mintCV(recruiterAddr, tokenUri);
     const rc = await tx.wait();
 
     const ev = rc.events?.find(e => e.event === "CVMinted");

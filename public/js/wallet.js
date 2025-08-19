@@ -72,7 +72,7 @@ contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
     try {
       if (!contract) await connect();
       status.textContent = "Submitting mint…";
-      const tx = await contract.mintCV(recruiter, bps, tokenURI);
+      const tx = await contract.mintCV(recruiter, tokenURI);
       const rc = await tx.wait();
       const ev = rc.events.find(e => e.event === "CVMinted");
       const tokenId = ev?.args?.tokenId?.toString?.() || "check tx";

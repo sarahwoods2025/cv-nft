@@ -33,26 +33,27 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   });
 
-  // mint CV NFT
-  mintBtn.addEventListener("click", async () => {
-    if (!contract) {
-      statusEl.textContent = "Please connect wallet first";
-      return;
-    }
+ // mint
+mintBtn.addEventListener("click", async () => {
+  if (!contract) {
+    statusEl.textContent = "Please connect wallet first";
+    return;
+  }
 
-    try {
-      const recruiter = recruiterSelect.value;  // address from dropdown
-      const tokenUri = window.__DAPP_CONFIG__.TOKEN_URI; // backend-provided fixed URI
+  try {
+    const recruiterAddr = document.getElementById("recruiterSelect").value;
 
-      console.log("Minting CV with recruiter:", recruiter, "URI:", tokenUri);
+    const tx = await contract.mintCV(
+      recruiterAddr,
+      window.__DAPP_CONFIG__.TOKEN_URI
+    );
 
-      const tx = await contract.mintCV(recruiter, tokenUri);
-      statusEl.textContent = `⏳ Minting... ${tx.hash}`;
-      const receipt = await tx.wait();
-      statusEl.textContent = `✅ Minted! Token ID: ${receipt.events[0].args.tokenId.toString()}`;
-    } catch (err) {
-      console.error(err);
-      statusEl.textContent = `❌ Error: ${err.message}`;
-    }
-  });
+    statusEl.textContent = `Minting... ${tx.hash}`;
+    await tx.wait();
+    statusEl.textContent = "✅ Minted successfully!";
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = `❌ Error: ${err.message}`;
+  }
+});
 });

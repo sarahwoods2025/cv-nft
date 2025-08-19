@@ -10,28 +10,28 @@
   <%- include('../partials/header') %>
 
   <main class="container">
-  <section class="card glow center">
-    <img src="/img/SW-logo.png" alt="CV preview" class="cv-img" />
+    <section class="card glow center">
+      <img src="/img/SW-logo.png" alt="CV preview" class="cv-img" />
 
-    <div class="row center">
-      <label for="recruiterInput">Choose recruiter:</label>
-      <select id="recruiterSelect">
-      <option value="0xa7E7ABBf3eb2B4c05CcB84b0B8bC747eE6972eCF">DreamJob</option>
-      <option value="0x1234567890abcdef1234567890abcdef12345678">Web3 Recruiter</option>
-      <option value="0xabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd">Tech Headhunter</option>
-      </select>
-    </div>
+      <div class="row center">
+        <label for="recruiterInput">Choose recruiter:</label>
+        <select id="recruiterSelect">
+          <!-- 👇 Values are actual Ethereum addresses -->
+          <option value="0xa7E7ABBf3eb2B4c05CcB84b0B8bC747eE6972eCF">DreamJob</option>
+          <option value="0x1234567890abcdef1234567890abcdef12345678">Web3 Recruiter</option>
+          <option value="0xabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd">Tech Headhunter</option>
+        </select>
+      </div>
 
-    <div class="row center">
-      <button type="button" id="connectBtn" class="btn">Connect Wallet</button>
-      <button type="submit" id="mintBtn" class="btn">Mint</button>
-    </div>
+      <div class="row center">
+        <button type="button" id="connectBtn" class="btn">Connect Wallet</button>
+        <button type="submit" id="mintBtn" class="btn">Mint</button>
+      </div>
 
-    <p id="status"></p>
-    <p id="accountSpan"></p>
-  </section>
-</main>
-
+      <p id="status"></p>
+      <p id="accountSpan"></p>
+    </section>
+  </main>
 
   <%- include('../partials/footer') %>
 

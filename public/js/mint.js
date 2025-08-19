@@ -1,31 +1,58 @@
-window.addEventListener("DOMContentLoaded", () => {
+console.log("mint.js loaded");
+
+document.addEventListener("DOMContentLoaded", () => {
   const connectBtn = document.getElementById("connectBtn");
-  const accountSpan = document.getElementById("accountSpan");
-  const status = document.getElementById("status");
+  const mintBtn = document.getElementById("mintBtn");
+  const statusEl = document.getElementById("status");
+  const accountEl = document.getElementById("accountSpan");
+  const recruiterSelect = document.getElementById("recruiterSelect"); // dropdown
 
-  let provider;
-  let signer;
+  let signer, contract;
 
-  async function connectWallet() {
-    if (typeof window.ethereum === "undefined") {
-      status.textContent = "MetaMask not found.";
+  // connect wallet
+  connectBtn.addEventListener("click", async () => {
+    if (!window.ethereum) {
+      alert("MetaMask not found");
+      return;
+    }
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    signer = provider.getSigner();
+
+    const account = await signer.getAddress();
+    accountEl.textContent = `Connected: ${account}`;
+    statusEl.textContent = "Wallet connected!";
+
+    // load contract ABI
+    const abi = await fetch("/abi/Cvnft.json").then(r => r.json()); 
+    contract = new ethers.Contract(
+      window.__DAPP_CONFIG__.CONTRACT_ADDRESS,
+      abi,
+      signer
+    );
+  });
+
+  // mint CV NFT
+  mintBtn.addEventListener("click", async () => {
+    if (!contract) {
+      statusEl.textContent = "Please connect wallet first";
       return;
     }
 
     try {
-      provider = new ethers.providers.Web3Provider(window.ethereum);
-      await provider.send("eth_requestAccounts", []);
-      signer = provider.getSigner();
-      const account = await signer.getAddress();
+      const recruiter = recruiterSelect.value;  // address from dropdown
+      const tokenUri = window.__DAPP_CONFIG__.TOKEN_URI; // backend-provided fixed URI
 
-      accountSpan.textContent = `Connected: ${account}`;
-      status.textContent = "Wallet connected!";
-      console.log("Wallet connected:", account);
+      console.log("Minting CV with recruiter:", recruiter, "URI:", tokenUri);
+
+      const tx = await contract.mintCV(recruiter, tokenUri);
+      statusEl.textContent = `⏳ Minting... ${tx.hash}`;
+      const receipt = await tx.wait();
+      statusEl.textContent = `✅ Minted! Token ID: ${receipt.events[0].args.tokenId.toString()}`;
     } catch (err) {
-      console.error("Wallet connection failed:", err);
-      status.textContent = "Connection failed.";
+      console.error(err);
+      statusEl.textContent = `❌ Error: ${err.message}`;
     }
-  }
-
-  connectBtn.addEventListener("click", connectWallet);
+  });
 });

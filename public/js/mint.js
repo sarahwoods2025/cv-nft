@@ -41,7 +41,9 @@ mintBtn.addEventListener("click", async () => {
 
   try {
     const recruiterAddr = recruiterSelect.value;
-    console.log("Recruiter address selected:", recruiterAddr); // 🪵 Debug
+      console.log("Recruiter:", recruiterAddr);
+      console.log("Token URI:", window.__DAPP_CONFIG__.TOKEN_URI);
+
 
     if (!recruiterAddr.startsWith("0x")) {
       throw new Error("Recruiter address is invalid: " + recruiterAddr);

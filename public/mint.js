@@ -67,17 +67,23 @@
     catch (e) { status.textContent = e.message || String(e); }
   });
 
+  // ---- Recruiter mapping (dropdown -> wallet address) ----
+  const RECRUITER_MAP = {
+    "DreamJob": cfg.DEFAULT_RECRUITER, // comes from your env.config
+  };
+
   mintBtn?.addEventListener("click", async () => {
     try {
       if (!contract) await connect();
 
-      // Read inputs with fallback to env defaults
-      const r = (document.getElementById("recruiterInput")?.value || "").trim() || cfg.DEFAULT_RECRUITER;
-      const bps = Number(document.getElementById("bpsInput")?.value || cfg.DEFAULT_BPS);
+      const recruiterName = document.getElementById("recruiterInput")?.value || "DreamJob";
+      const recruiter = RECRUITER_MAP[recruiterName];
+
+      const bps = Number(cfg.DEFAULT_BPS);
       const tokenUri = cfg.TOKEN_URI;
 
       status.textContent = "Submitting mint…";
-      const tx = await contract.mintCV(r, bps, tokenUri);
+      const tx = await contract.mintCV(recruiter, bps, tokenUri);
       const rc = await tx.wait();
 
       const ev = rc.events?.find(e => e.event === "CVMinted");

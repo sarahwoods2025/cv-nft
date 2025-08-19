@@ -10,29 +10,26 @@
   <%- include('../partials/header') %>
 
   <main class="container">
-    <section class="card glow center">
-      <img src="/img/SW-logo.png" alt="CV preview" class="cv-img"/>
+  <section class="card glow center">
+    <img src="/img/SW-logo.png" alt="CV preview" class="cv-img" />
 
-      <!-- ✅ Wrap inputs + buttons inside a form -->
-      <form id="mintForm" class="row center">
-        <div class="row center">
-          <input id="recruiter" placeholder="Recruiter 0x..." style="width:320px;padding:8px;">
-          <input id="bps" type="number" min="0" max="10000" 
-                 value="<%= DEFAULT_BPS %>" style="width:140px;padding:8px;">
-          <input id="tokenURI" placeholder="Token URI" value="<%= TOKEN_URI %>" style="width:320px;padding:8px;">
-        </div>
+    <div class="row center">
+      <label for="recruiterInput">Choose recruiter:</label>
+      <select id="recruiterInput" class="form-control">
+        <option value="DreamJob">DreamJob</option>
+      </select>
+    </div>
 
-        <div class="row center">
-          <button type="button" id="connectBtn" class="btn">Connect Wallet</button>
-          <button type="submit" class="btn">Mint</button>
-        </div>
-      </form>
+    <div class="row center">
+      <button type="button" id="connectBtn" class="btn">Connect Wallet</button>
+      <button type="submit" id="mintBtn" class="btn">Mint</button>
+    </div>
 
-      <!-- ✅ Status & account info -->
-      <p id="mintStatus"></p>
-      <p id="accountSpan"></p>
-    </section>
-  </main>
+    <p id="status"></p>
+    <p id="accountSpan"></p>
+  </section>
+</main>
+
 
   <%- include('../partials/footer') %>
 
